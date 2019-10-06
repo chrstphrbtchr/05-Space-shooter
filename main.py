@@ -125,6 +125,15 @@ class Window(arcade.Window):
         self.score = 0
         self.deadbullet_list = []
 
+        ### SOUNDS ###
+        self.gun_sound = arcade.sound.load_sound("assets/zounds/.wav")
+        self.hit_sound = arcade.sound.load_sound("assets/zounds/one.wav")
+        self.eyedie_sound = arcade.sound.load_sound("assets/zounds/two.wav")
+        self.wedead_sound = arcade.sound.load_sound("assets/zounds/ded.wav")
+        self.eyeshot_sound = arcade.sound.load_sound("assets/zounds/eye.wav")
+
+
+
     def setup(self):
         '''
         Set up enemies
@@ -157,6 +166,7 @@ class Window(arcade.Window):
             # for every bullet that hits, decrease the hp and then see if it dies
             for z in damage:
                 e.hp = e.hp - z.damage
+                arcade.sound.play_sound(self.hit_sound)
                 z.kill()        # Removes z (the bullet?) - add img for explosion in next project.
                                 # .kill() removes sprites.
             # increase the score
@@ -168,6 +178,7 @@ class Window(arcade.Window):
                     self.enemy_list.update() 
                     self.deadbullet_list.append(BadBullet) 
                     self.deadbullet_list.append(e)
+                    arcade.sound.play_sound(self.eyedie_sound)
                 else:
                     self.score = self.score + HIT_SCORE
             # the pass statement is a placeholder. Remove line 81 when you add your code
@@ -179,6 +190,7 @@ class Window(arcade.Window):
                     x = 160 * (f+1)
                     y = 500
                     badbullet = BadBullet((x,y), (0,10), BULLET_DAMAGE)
+                    arcade.sound.play_sound(self.eyeshot_sound)
                     self.badbullet_list.append(badbullet)
                     if e.hp <=0:
                         f = -1
@@ -188,6 +200,7 @@ class Window(arcade.Window):
                 for h in hurts:
                     p.hp = p.hp - h.hurts
                     h.kill()
+                    arcade.sound.play_sound(self.wedead_sound)
                     p.kill()
                     if p.hp <= 0:
                         #self.player = arcade.SpriteList
@@ -249,6 +262,7 @@ class Window(arcade.Window):
             self.player.change_y = -MOVE_SPEED
         elif key == arcade.key.SPACE:
             print("Fire")
+            arcade.sound.play_sound(self.gun_sound)
             x = self.player.center_x
             y = self.player.center_y + 88
             bullet = Bullet((x,y), (0,10), BULLET_DAMAGE)
